@@ -1,57 +1,59 @@
-# m,n = map(int, input().split())
-# a, b, dir = map(int, input().split())
-# maps = []
-# for i in range(n):
-#   mapRow = list(map(int, input().split()))
-#   maps.append(mapRow)
-# print(maps)
+n,m = map(int, input().split())
+x, y, direction = map(int, input().split())
+maps = []
+for i in range(n):
+  mapRow = list(map(int, input().split()))
+  maps.append(mapRow)
+print(maps)
 
-m, n = 4, 4
-a, b, div = 1, 1, 0
-maps = [[1,1,1,1],[1,0,0,1],[1,1,0,1],[1,1,1,1]]
+# n, m = 4, 4
+# x, y, direction = 1, 1, 0
+# maps = [[1,1,1,1],[1,0,0,1],[1,1,0,1],[1,1,1,1]]
 
 visited = [[0] * n for _ in range(m)]
-visited[a][b] = 1
-# print(visited)
+visited[x][y] = 1
+
+def turnLeft():
+  global direction
+  direction -= 1
+  if direction < 0:
+    direction = 3
+
+dx = [-1,0,1,0]
+dy = [0,1,0,-1]
+
+# 시뮬레이션 시작
 count = 1
-def turnLeft(div):
-  result = div - 1
-  if result < 0:
-    result = 3
-  return result
-
-da = [-1,0,1,0]
-db = [0,1,0,-1]
-
-left = turnLeft(div)
-
-# 왼쪽 방향 안가봤으면 왼쪽 회전하고 한칸 전진
-rotate = 0
+turn_time = 0
 while(1):
-  if rotate == 4:
-    if maps[a-da[div][b-da[div]]] == 1:
-      break
-    else:
-      a -= da[div]
-      b -= da[div]
-      rotate = 0
-
-
-  if visited[da[left]] == 0 and maps[da[left]] == 0:
-    print(a,b,"에서",end=" ")
-    a += da[div]
-    b += db[div]
-    print(a,b,"로 이동")    
-    visited[a][b] = 1
-    div = left
-    left = turnLeft(div)
-    rotate = 0
+  # 왼쪽으로 회전
+  turnLeft()
+  nx = x + dx[direction]
+  ny = y + dy[direction]
+  # 회전한 이후 정면에 가보지 않은 칸이 존재하는 경우 이동
+  if visited[nx][ny] == 0 and maps[nx][ny] == 0:
+    visited[nx][ny] = 1
+    x = nx
+    y = ny
     count += 1
-  # 왼쪽이 갈수없는길이면 회전만 함
-  if visited[da[left]] == 0 and maps[da[left]] == 1:
-    div = left
-    left = turnLeft(div)
-    rotate += 1
-  # 왼쪽 방향 안가봤으면 왼쪽 회전하고 한칸 전진
+    turn_time = 0
+    # print(x,y, direction, turn_time)
+    continue
+    # 회전한 이후 정면에 가보죄 않은 칸이 없거나 바다인 경우
+  else:
+    turn_time += 1
+    # print(x,y, direction, turn_time)
+  # 네 방향 모두 갈 수 없는 경우
+  if turn_time == 4:
+    nx = x - dx[direction]
+    ny = y - dy[direction]
+    # 뒤로 갈 수 있다면 이동하기
+    if maps[nx][ny] == 0:
+      x = nx
+      y = ny
+    # 뒤가 바다로 막혀있는 경우
+    else:
+      break
+    turn_time = 0
 
 print(count)
