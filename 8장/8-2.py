@@ -1,3 +1,4 @@
+# 개미 전사
 n = int(input())
 food_list = list(map(int, input().split(" ")))
 
