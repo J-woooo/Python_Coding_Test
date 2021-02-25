@@ -7,6 +7,7 @@ def isNum(number):
     return False
 
 
+
 alphabet = []
 sum = 0
 for number in array:
